@@ -1,10 +1,7 @@
 # game/logic.py
 
 def compress(grid):
-    """
-    Dồn số về bên trái (loại bỏ số 0).
-    Trả về: (ma trận mới, có thay đổi hay không)
-    """
+    """Dồn số về bên trái, không thay đổi điểm số."""
     new_grid = [[0] * 4 for _ in range(4)]
     changed = False
     for r in range(4):
@@ -19,20 +16,23 @@ def compress(grid):
 
 def merge(grid):
     """
-    Gộp 2 số giống nhau kề nhau.
-    Trả về: (ma trận mới, có thay đổi hay không)
+    Gộp số và TRẢ VỀ ĐIỂM SỐ.
+    Ví dụ: 2 gộp 2 -> Điểm += 4.
     """
+    score_gained = 0
     changed = False
     for r in range(4):
         for c in range(3):
             if grid[r][c] != 0 and grid[r][c] == grid[r][c+1]:
-                grid[r][c] *= 2
+                merged_val = grid[r][c] * 2
+                grid[r][c] = merged_val
                 grid[r][c+1] = 0
+                
+                score_gained += merged_val  # Cộng điểm
                 changed = True
-    return grid, changed
+    return grid, changed, score_gained
 
 def reverse(grid):
-    """Đảo ngược hàng (Dùng cho Move Right)"""
     new_grid = []
     for r in range(4):
         new_grid.append([])
@@ -41,60 +41,47 @@ def reverse(grid):
     return new_grid
 
 def transpose(grid):
-    """Hoán vị hàng thành cột (Dùng cho Move Up/Down)"""
     new_grid = [[0]*4 for _ in range(4)]
     for r in range(4):
         for c in range(4):
             new_grid[r][c] = grid[c][r]
     return new_grid
 
-# --- 4 HÀM DI CHUYỂN CHÍNH (Đã tối ưu biến changed) ---
+# --- CÁC HÀM DI CHUYỂN (Cập nhật để trả về score) ---
 
 def move_left(grid):
     new_grid, changed1 = compress(grid)
-    new_grid, changed2 = merge(new_grid)
-    new_grid, _ = compress(new_grid) # Nén lại lần nữa sau khi gộp
-    return new_grid, (changed1 or changed2)
+    new_grid, changed2, score = merge(new_grid) # Nhận điểm từ hàm merge
+    new_grid, _ = compress(new_grid)
+    return new_grid, (changed1 or changed2), score
 
 def move_right(grid):
     new_grid = reverse(grid)
-    new_grid, changed = move_left(new_grid)
+    new_grid, changed, score = move_left(new_grid)
     new_grid = reverse(new_grid)
-    return new_grid, changed
+    return new_grid, changed, score
 
 def move_up(grid):
     new_grid = transpose(grid)
-    new_grid, changed = move_left(new_grid)
+    new_grid, changed, score = move_left(new_grid)
     new_grid = transpose(new_grid)
-    return new_grid, changed
+    return new_grid, changed, score
 
 def move_down(grid):
     new_grid = transpose(grid)
-    new_grid, changed = move_right(new_grid)
+    new_grid, changed, score = move_right(new_grid)
     new_grid = transpose(new_grid)
-    return new_grid, changed
+    return new_grid, changed, score
 
-# --- HÀM KIỂM TRA GAME OVER (Mới thêm) ---
-
+# --- CHECK GAME OVER (Giữ nguyên) ---
 def check_game_over(grid):
-    """
-    Trả về True nếu không còn nước đi nào hợp lệ.
-    """
-    # 1. Nếu còn ô trống -> Chưa thua
     for r in range(4):
         for c in range(4):
-            if grid[r][c] == 0:
-                return False
-    
-    # 2. Nếu còn 2 ô cạnh nhau giống nhau -> Chưa thua
+            if grid[r][c] == 0: return False
     for r in range(4):
         for c in range(3):
-            if grid[r][c] == grid[r][c+1]:
-                return False
+            if grid[r][c] == grid[r][c+1]: return False
     for r in range(3):
         for c in range(4):
-            if grid[r][c] == grid[r+1][c]:
-                return False
-    
-    # Không còn cách nào cứu vãn
+            if grid[r][c] == grid[r+1][c]: return False
     return True
