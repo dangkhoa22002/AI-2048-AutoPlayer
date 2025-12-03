@@ -1,20 +1,19 @@
 import pygame
 import sys
-import random
-import config 
+import config
 from game.board import Board
 from game.logic import move_left, move_right, move_up, move_down, check_game_over
 from ui.display import Display
 
-def get_random_move():
-    return random.choice([move_left, move_right, move_up, move_down])
+# --- IMPORT MỚI TỪ THƯ MỤC AI ---
+from ai.algorithms import get_random_move, get_best_move 
+# --------------------------------
 
 def main():
     game_board = Board()
     ui = Display()
     clock = pygame.time.Clock()
     
-    # State Variables
     score = 0
     high_score = 0
     game_over = False 
@@ -22,11 +21,10 @@ def main():
     ai_running = False
     ai_mode = "Random"
     
-    # Tốc độ AI (Mặc định Fast)
+    # Tốc độ AI
     ai_speed_str = "Fast" 
     fps = config.SPEED_FAST
 
-    # Load High Score
     try:
         with open("highscore.txt", "r") as f:
             high_score = int(f.read())
@@ -34,50 +32,41 @@ def main():
 
     running = True
     while running:
-        # A. INPUT EVENT (XỬ LÝ SỰ KIỆN)
+        # A. XỬ LÝ SỰ KIỆN (Giữ nguyên như cũ)
         for event in pygame.event.get():
-            
-            # 1. LOGIC THOÁT GAME (Ưu tiên cao nhất)
-            # Bấm nút X trên cửa sổ HOẶC Bấm phím Q
             if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_q):
-                # Lưu điểm cao trước khi thoát
-                with open("highscore.txt", "w") as f: 
-                    f.write(str(high_score))
+                with open("highscore.txt", "w") as f: f.write(str(high_score))
                 running = False
             
-            # 2. CLICK CHUỘT (Xử lý nút bấm UI)
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
                     pos = event.pos
-                    
-                    # Nút RESET
                     if ui.reset_btn_rect.collidepoint(pos):
                         game_board = Board()
                         score = 0
                         game_over = False
                         ai_running = False 
-                        print("Game Reset!")
-
-                    # Nút RUN/STOP (Chỉ bấm được nếu chưa Game Over)
                     if ui.run_btn_rect.collidepoint(pos) and not game_over:
                         ai_running = not ai_running
-
-                    # Chọn Mode
                     if ui.mode_random_rect.collidepoint(pos): ai_mode = "Random"
                     if ui.mode_ai_rect.collidepoint(pos): ai_mode = "AI"
-
-                    # Chọn Speed
+                    
+                    # Chỉnh FPS theo speed
                     if ui.speed_slow_rect.collidepoint(pos): 
                         ai_speed_str = "Slow"
                         fps = config.SPEED_SLOW
+                        print("Speed set to SLOW")
+
                     if ui.speed_fast_rect.collidepoint(pos): 
                         ai_speed_str = "Fast"
                         fps = config.SPEED_FAST
+                        print("Speed set to FAST")
+
                     if ui.speed_full_rect.collidepoint(pos): 
                         ai_speed_str = "Full"
                         fps = config.SPEED_FULL
+                        print("Speed set to FULL") 
 
-            # 3. PHÍM ĐIỀU HƯỚNG (Chỉ nhận khi AI tắt và chưa Game Over)
             elif not ai_running and not game_over and event.type == pygame.KEYDOWN:
                 move_func = None
                 if event.key == pygame.K_LEFT: move_func = move_left
@@ -94,15 +83,19 @@ def main():
                         if score > high_score: high_score = score
                         if check_game_over(game_board.grid): game_over = True
 
-        # B. AI LOGIC
+        # B. AI LOGIC (SỬA LẠI ĐỂ DÙNG MODULE MỚI)
         if ai_running and not game_over:
-            pygame.event.pump() # Giúp Windows biết game vẫn đang sống
+            pygame.event.pump() # Chống treo máy
+            
             move_func = None
+            
             if ai_mode == "Random":
-                move_func = get_random_move()
+                # Gọi hàm từ file ai/algorithms.py
+                move_func = get_random_move(game_board.grid)
+                
             elif ai_mode == "AI":
-                # Placeholder cho Minimax
-                move_func = get_random_move() 
+                # Gọi hàm Expectimax xịn xò
+                move_func = get_best_move(game_board.grid, depth=3)  #Đã thay đổi từ depth 2 lên 4 và hiểu quả rõ rệt, nhưng để 3 cho an toàn tránh treo máy
             
             if move_func:
                 new_grid, changed, points = move_func(game_board.grid)
@@ -115,11 +108,12 @@ def main():
                         game_over = True
                         ai_running = False 
                 else:
-                    pass
+                    # Nếu AI tính ra nước đi nhưng thực tế không đổi (hiếm gặp), dừng AI
+                    if ai_mode == "AI": 
+                        pass 
 
         # C. RENDER
         ui.draw_game(game_board.grid, score, high_score, ai_running, ai_mode, ai_speed_str, game_over)
-        
         clock.tick(fps)
 
     pygame.quit()
