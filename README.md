@@ -21,7 +21,9 @@ _(Hình ảnh minh họa giao diện game)_
 
 ---
 
-## 📥 TẢI VÀ CHƠI NGAY (Dành cho Người chơi)
+## 📥 TẢI VÀ CHƠI NGAY
+
+### 👨‍💻 (Dành cho Người chơi)
 
 Bạn không cần biết lập trình, chỉ cần tải game về và chơi:
 
@@ -29,9 +31,7 @@ Bạn không cần biết lập trình, chỉ cần tải game về và chơi:
 2.  Tải file **`AI_2048_VIP.exe`**.
 3.  Bấm đúp vào file để chạy. (Game sẽ tự tạo file `highscore.txt` để lưu điểm của bạn).
 
----
-
-## 👨‍💻 DÀNH CHO LẬP TRÌNH VIÊN (Dành cho Developer)
+### 👨‍💻 DÀNH CHO LẬP TRÌNH VIÊN (Dành cho Developer)
 
 Yêu cầu: Python 3.10 trở lên.
 
@@ -62,7 +62,9 @@ Yêu cầu: Python 3.10 trở lên.
   - Bấm nút **RUN AUTO**.
 - **Thoát game:** Bấm phím `Q` hoặc nút `X` trên cửa sổ.
 
-### 3. Hướng dẫn Đóng gói (.exe)
+---
+
+## 🌟 Hướng dẫn Đóng gói (.exe)
 
 Nếu bạn muốn tự tạo file `.exe` từ mã nguồn, hãy làm theo các bước sau:
 
