@@ -17,8 +17,21 @@ _(Hình ảnh minh họa giao diện game)_
   - Dashboard điều khiển (Start/Stop/Reset).
   - Tùy chỉnh tốc độ (Slow/Fast/Full).
   - Lưu điểm cao (High Score).
+- **Portable:** Chơi ngay không cần cài đặt Python.
 
-## 🛠️ Cài đặt & Chạy
+---
+
+## 📥 TẢI VÀ CHƠI NGAY (Dành cho Người chơi)
+
+Bạn không cần biết lập trình, chỉ cần tải game về và chơi:
+
+1.  Truy cập mục **[Releases](../../releases)** bên phải giao diện GitHub.
+2.  Tải file **`AI_2048_VIP.exe`**.
+3.  Bấm đúp vào file để chạy. (Game sẽ tự tạo file `highscore.txt` để lưu điểm của bạn).
+
+---
+
+## 👨‍💻 DÀNH CHO LẬP TRÌNH VIÊN (Dành cho Developer)
 
 Yêu cầu: Python 3.10 trở lên.
 

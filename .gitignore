@@ -20,3 +20,8 @@ highscore.txt
 # --- Hệ điều hành ---
 .DS_Store
 Thumbs.db
+
+# --- PyInstaller (Rác sinh ra khi đóng gói exe) ---
+build/
+dist/
+*.spec
