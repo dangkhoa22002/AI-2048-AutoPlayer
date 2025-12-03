@@ -61,3 +61,22 @@ Yêu cầu: Python 3.10 trở lên.
   - Chọn tốc độ (khuyên dùng **Fast** hoặc **Full**).
   - Bấm nút **RUN AUTO**.
 - **Thoát game:** Bấm phím `Q` hoặc nút `X` trên cửa sổ.
+
+### 3. Hướng dẫn Đóng gói (.exe)
+
+Nếu bạn muốn tự tạo file `.exe` từ mã nguồn, hãy làm theo các bước sau:
+
+**Bước 1: Cài đặt PyInstaller**
+(Nếu bạn đã cài `requirements.txt` thì bỏ qua bước này)
+
+```bash
+pip install pyinstaller
+```
+
+**Bước 2: Chạy lệnh đóng gói Tại thư mục gốc của dự án (nơi có file main.py), chạy lệnh:**
+
+```bash
+pyinstaller --noconsole --onefile --name="AI_2048_VIP" main.py
+```
+
+**Bước 3: Lấy thành phẩm Sau khi chạy xong, file game AI_2048_VIP.exe sẽ xuất hiện trong thư mục dist/.**
