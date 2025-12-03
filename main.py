@@ -1,34 +1,54 @@
+import pygame
+import sys
 from game.board import Board
 from game.logic import move_left, move_right, move_up, move_down, check_game_over
+from ui.display import Display
 
-def print_grid(grid):
-    for row in grid:
-        print(row)
-    print("-" * 20)
+def main():
+    # 1. Khởi tạo
+    game_board = Board()
+    ui = Display()
+    clock = pygame.time.Clock() # Để kiểm soát FPS
+
+    print("Game Started! Use Arrow Keys to play. Press Q to Quit.")
+
+    # 2. Vòng lặp chính (Game Loop)
+    running = True
+    while running:
+        # A. Xử lý sự kiện (Input)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            
+            # Xử lý phím bấm
+            if event.type == pygame.KEYDOWN:
+                changed = False
+                if event.key == pygame.K_LEFT:
+                    game_board.grid, changed = move_left(game_board.grid)
+                elif event.key == pygame.K_RIGHT:
+                    game_board.grid, changed = move_right(game_board.grid)
+                elif event.key == pygame.K_UP:
+                    game_board.grid, changed = move_up(game_board.grid)
+                elif event.key == pygame.K_DOWN:
+                    game_board.grid, changed = move_down(game_board.grid)
+                elif event.key == pygame.K_q:
+                    running = False
+
+                # Nếu có di chuyển -> Sinh số mới -> Kiểm tra thua
+                if changed:
+                    game_board.add_new_tile()
+                    if check_game_over(game_board.grid):
+                        print("GAME OVER!")
+
+        # B. Vẽ lại màn hình (Render)
+        ui.draw_board(game_board.grid)
+        
+        # Giới hạn tốc độ khung hình (60 FPS)
+        clock.tick(60)
+
+    # Thoát
+    pygame.quit()
+    sys.exit()
 
 if __name__ == "__main__":
-    # 1. Tạo bàn cờ giả định để test (thay vì random)
-    game = Board()
-    # Gán cứng giá trị để test logic gộp: [2, 2, 0, 0] -> [4, 0, 0, 0]
-    game.grid = [
-        [2, 2, 4, 4],
-        [0, 2, 2, 0],
-        [4, 0, 4, 2],
-        [0, 0, 0, 2]
-    ]
-    
-    print("Bàn cờ ban đầu:")
-    print_grid(game.grid)
-
-    print("--- Thử đi sang TRÁI (LEFT) ---")
-    new_grid, changed = move_left(game.grid)
-    print_grid(new_grid)
-    print(f"Có thay đổi không? {changed}") 
-    # Kết quả mong đợi: Hàng 1 thành [4, 8, 0, 0], changed=True
-
-    print("--- Thử đi sang PHẢI (RIGHT) với bàn cờ gốc ---")
-    new_grid, changed = move_right(game.grid)
-    print_grid(new_grid)
-    
-    # Test Game Over
-    print("Check Game Over (False là chưa thua):", check_game_over(new_grid))
+    main()
