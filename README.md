@@ -25,7 +25,7 @@ Yêu cầu: Python 3.10 trở lên.
 1.  **Clone dự án:**
 
     ```bash
-    git clone [https://github.com/username-cua-ban/AI-2048-AutoPlayer.git](https://github.com/username-cua-ban/AI-2048-AutoPlayer.git)
+    git clone https://github.com/dangkhoa22002/AI-2048-AutoPlayer.git
     cd AI-2048-AutoPlayer
     ```
 
@@ -48,15 +48,3 @@ Yêu cầu: Python 3.10 trở lên.
   - Chọn tốc độ (khuyên dùng **Fast** hoặc **Full**).
   - Bấm nút **RUN AUTO**.
 - **Thoát game:** Bấm phím `Q` hoặc nút `X` trên cửa sổ.
-
-## 👥 Thành viên nhóm
-
-1.  **[Tên Bạn]** - Leader, AI Engineer (Expectimax, Optimization).
-2.  **[Tên Thành viên 2]** - Backend Developer (Game Logic).
-3.  **[Tên Thành viên 3]** - Frontend Developer (UI/UX).
-4.  **[Tên Thành viên 4]** - AI Researcher (Heuristics).
-5.  **[Tên Thành viên 5]** - Data Analyst & Report.
-
----
-
-_Dự án được thực hiện tại Trường Đại học Mở TP.HCM, 202X._
