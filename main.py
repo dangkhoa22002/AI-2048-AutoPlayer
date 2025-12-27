@@ -33,7 +33,18 @@ def main():
     running = True
     while running:
         # A. XỬ LÝ SỰ KIỆN (Giữ nguyên như cũ)
-        for event in pygame.event.get():
+        try:
+            events = pygame.event.get()
+        except Exception as e:
+            print("Error while fetching pygame events:", repr(e))
+            try:
+                # attempt to clear the event queue to avoid repeated crashes
+                pygame.event.clear()
+            except Exception:
+                pass
+            events = []
+
+        for event in events:
             if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_q):
                 with open("highscore.txt", "w") as f: f.write(str(high_score))
                 running = False
